@@ -315,6 +315,7 @@ public:
       : config(config) {
     uniquer.registerParametricStorageType<ProgramPoint>();
   }
+  virtual ~DataFlowSolver() = default;
 
   /// Load an analysis into the solver. Return the analysis instance.
   template <typename AnalysisT, typename... Args>
@@ -322,7 +323,7 @@ public:
 
   /// Initialize the children analyses starting from the provided top-level
   /// operation and run the analysis until fixpoint.
-  LogicalResult initializeAndRun(Operation *top);
+  virtual LogicalResult initializeAndRun(Operation *top);
 
   /// Lookup an analysis state for the given lattice anchor. Returns null if one
   /// does not exist.
@@ -401,7 +402,7 @@ public:
   /// Get the configuration of the solver.
   const DataFlowConfig &getConfig() const { return config; }
 
-private:
+protected:
   /// Configuration of the dataflow solver.
   DataFlowConfig config;
 
@@ -616,7 +617,7 @@ protected:
   StringRef debugName;
 #endif // LLVM_ENABLE_ABI_BREAKING_CHECKS
 
-private:
+protected:
   /// The parent data-flow solver.
   DataFlowSolver &solver;
 
