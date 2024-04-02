@@ -1387,6 +1387,10 @@ void ConversionPatternRewriterImpl::notifyOpReplaced(Operation *op,
   // Record the requested operation replacement.
   replacements.insert(std::make_pair(op, OpReplacement(currentTypeConverter)));
 
+  // If it is an unrealizedMaterializations, remove it
+  if (auto it = std::find_if(unresolvedMaterializations.begin(), unresolvedMaterializations.end(), [&](const auto& item){ return item.getOp() == op; }); it != unresolvedMaterializations.end())
+    unresolvedMaterializations.erase(it);
+
   // Mark this operation as recursively ignored so that we don't need to
   // convert any nested operations.
   markNestedOpsIgnored(op);
